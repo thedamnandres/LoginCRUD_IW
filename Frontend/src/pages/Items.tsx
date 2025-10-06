@@ -44,14 +44,15 @@ const Items: React.FC = () => {
     ((user as any)?.is_admin === true)
 
   const ownerDisplay = (r: RawItem) =>
-    r.ownerEmail ??
-    r.owner_email ??
+    (r.owner && r.owner.username) ??
     r.ownerUsername ??
     r.owner_username ??
-    (r.owner && (r.owner.email || r.owner.username || r.owner.name)) ??
-    (r.user && (r.user.email || r.user.username || r.user.name)) ??
-    r.user_email ??
+    (r.owner && (r.owner.name || r.owner.email)) ??
+    (r.user && (r.user.username || r.user.name || r.user.email)) ??
     r.user_username ??
+    r.ownerEmail ??
+    r.owner_email ??
+    r.user_email ??
     (r.ownerId ?? r.owner_id ?? '')
 
   const mapRawToItem = (r: RawItem): Item => ({
@@ -155,7 +156,7 @@ const Items: React.FC = () => {
       { key: 'description', header: 'Descripción' },
     ] as const
 
-    const adminExtra = adminMode ? [{ key: 'ownerEmail', header: 'Owner' } as const] : []
+    const adminExtra = adminMode ? [{ key: 'ownerEmail', header: 'Usuario' } as const] : []
     return [...base, ...adminExtra]
   }, [adminMode])
 

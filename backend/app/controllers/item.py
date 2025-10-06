@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.database import get_db
 from app.models.item import Item
@@ -32,7 +32,7 @@ def list_items(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    return db.query(Item).filter(Item.owner_id == current_user.id).all()
+    return db.query(Item).options(joinedload(Item.owner)).filter(Item.owner_id == current_user.id).all()
 
 # List all items (admin only)
 @router.get("/all", response_model=list[ItemOut])
@@ -40,7 +40,7 @@ def list_all_items(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin),
 ):
-    return db.query(Item).all()
+    return db.query(Item).options(joinedload(Item.owner)).all()
 
 # Update an item
 @router.put("/{item_id}", response_model=ItemOut)
