@@ -46,58 +46,102 @@ const Register: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen grid place-items-center bg-gray-50">
-      <form onSubmit={onSubmit} className="bg-white w-full max-w-sm p-6 rounded-xl shadow">
-        <h1 className="text-2xl font-semibold mb-4">Crear cuenta</h1>
-        <div className="space-y-3">
-          <div>
-            <label className="block text-sm mb-1">Username</label>
-            <input
-              className="w-full border rounded px-3 py-2"
-              value={username}
-              onChange={(e)=>setUsername(e.target.value)}
-              placeholder="usuario123"
-              autoComplete="username"
-            />
-          </div>
-          <div>
-            <label className="block text-sm mb-1">Email</label>
-            <input
-              className="w-full border rounded px-3 py-2"
-              type="email"
-              value={email}
-              onChange={(e)=>setEmail(e.target.value)}
-              placeholder="usuario@correo.com"
-              autoComplete="email"
-            />
-          </div>
-          <div>
-            <label className="block text-sm mb-1">Contraseña</label>
-            <input
-              className="w-full border rounded px-3 py-2"
-              type="password"
-              value={password}
-              onChange={(e)=>setPassword(e.target.value)}
-              placeholder="••••••••"
-              autoComplete="new-password"
-            />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 px-4 py-8">
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Crear Cuenta</h1>
+            <p className="text-gray-600">Regístrate para comenzar</p>
           </div>
 
-          {error && <p className="text-red-600 text-sm">{error}</p>}
-          {ok && <p className="text-green-700 text-sm">{ok}</p>}
+          <form onSubmit={onSubmit} className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Usuario
+              </label>
+              <input
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 bg-white text-gray-900 placeholder-gray-500"
+                value={username}
+                onChange={(e)=>setUsername(e.target.value)}
+                placeholder="Elige tu nombre de usuario"
+                autoComplete="username"
+                required
+              />
+            </div>
 
-          <button
-            disabled={loading}
-            className="w-full bg-black text-white rounded-md py-2 mt-2 disabled:opacity-60"
-          >
-            {loading ? 'Creando…' : 'Crear cuenta'}
-          </button>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email
+              </label>
+              <input
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 bg-white text-gray-900 placeholder-gray-500"
+                type="email"
+                value={email}
+                onChange={(e)=>setEmail(e.target.value)}
+                placeholder="tu@email.com"
+                autoComplete="email"
+                required
+              />
+            </div>
 
-          <p className="text-sm text-center text-gray-600">
-            ¿Ya tienes cuenta? <Link className="underline" to="/login">Inicia sesión</Link>
-          </p>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Contraseña
+              </label>
+              <input
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 bg-white text-gray-900 placeholder-gray-500"
+                type="password"
+                value={password}
+                onChange={(e)=>setPassword(e.target.value)}
+                placeholder="Crea una contraseña segura"
+                autoComplete="new-password"
+                required
+              />
+            </div>
+
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                <p className="text-red-700 text-sm">{error}</p>
+              </div>
+            )}
+
+            {ok && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                <p className="text-green-700 text-sm">{ok}</p>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold py-3 px-4 rounded-lg hover:from-green-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Creando cuenta...
+                </span>
+              ) : 'Crear Cuenta'}
+            </button>
+
+            <div className="text-center pt-4 border-t border-gray-200">
+              <p className="text-sm text-gray-600">
+                ¿Ya tienes cuenta?{' '}
+                <Link 
+                  to="/login" 
+                  className="font-medium text-green-600 hover:text-green-500 transition duration-200"
+                >
+                  Inicia sesión aquí
+                </Link>
+              </p>
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   )
 }

@@ -151,7 +151,6 @@ const Items: React.FC = () => {
 
   const columns = useMemo(() => {
     const base = [
-      { key: 'id', header: 'ID' },
       { key: 'title', header: 'Título' },
       { key: 'description', header: 'Descripción' },
     ] as const
@@ -161,43 +160,85 @@ const Items: React.FC = () => {
   }, [adminMode])
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-semibold">
-          Items {adminMode ? '(todos)' : '(mis items)'}
-        </h1>
-        <button
-          onClick={() => { setEditing(null); setOpen(true) }}
-          className="px-3 py-2 rounded-md bg-black text-white"
-        >
-          Nuevo
-        </button>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Header Section */}
+          <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                  Gestión de Notas
+                </h1>
+                <p className="text-gray-600 flex items-center gap-2">
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                    adminMode 
+                      ? 'bg-purple-100 text-purple-800' 
+                      : 'bg-blue-100 text-blue-800'
+                  }`}>
+                    {adminMode ? 'Vista Administrador' : 'Vista Personal'}
+                  </span>
+                  {adminMode ? 'Viendo todos los items del sistema' : 'Viendo solo tus items'}
+                </p>
+              </div>
+              <button
+                onClick={() => { setEditing(null); setOpen(true) }}
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 shadow-lg hover:shadow-xl"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Nuevo Item
+              </button>
+            </div>
+          </div>
 
-      {error && (
-        <div className="mb-3 rounded-md border border-red-300 bg-red-50 p-3 text-sm text-red-700">
-          {String(error)}
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 shadow-sm">
+              <div className="flex items-center">
+                <svg className="w-5 h-5 text-red-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-red-700 font-medium">{String(error)}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Content Section */}
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            {loading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="flex items-center space-x-2 text-gray-600">
+                  <svg className="animate-spin h-6 w-6" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span className="text-lg font-medium">Cargando items...</span>
+                </div>
+              </div>
+            ) : (
+              <div className="p-6">
+                <DataTable<Item>
+                  columns={columns as any}
+                  data={rows}
+                  onEdit={(row) => { setEditing(row); setOpen(true) }}
+                  onDelete={onDelete}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Modal */}
+          <ModalForm
+            title={editing ? 'Editar item' : 'Nuevo item'}
+            open={open}
+            onClose={() => setOpen(false)}
+            initial={editing ?? {}}
+            onSubmit={editing ? onUpdate : onCreate}
+          />
         </div>
-      )}
-
-      {loading ? (
-        <p className="text-gray-500">Cargando…</p>
-      ) : (
-        <DataTable<Item>
-          columns={columns as any}
-          data={rows}
-          onEdit={(row) => { setEditing(row); setOpen(true) }}
-          onDelete={onDelete}
-        />
-      )}
-
-      <ModalForm
-        title={editing ? 'Editar item' : 'Nuevo item'}
-        open={open}
-        onClose={() => setOpen(false)}
-        initial={editing ?? {}}
-        onSubmit={editing ? onUpdate : onCreate}
-      />
+      </div>
     </div>
   )
 }
