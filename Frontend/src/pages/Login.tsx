@@ -23,7 +23,7 @@ useEffect(() => {
     setError(null); setLoading(true)
     try {
       await login(username, password) // 👈 no llamamos nav aquí
-      console.log('✅ Login correcto; esperando que AuthContext hidrate…')
+      console.log('Login correcto')
     } catch (err: any) {
       console.error('LOGIN ERROR:', err?.response?.status, err?.response?.data)
       setError(err?.response?.data?.message || 'Error de autenticación')
