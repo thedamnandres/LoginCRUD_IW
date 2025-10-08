@@ -16,6 +16,22 @@ services:
     networks:
       - mynet
 
+  frontend:
+    build: ./frontend
+    container_name: react_app
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.vite
+    environment:
+      - VITE_API_URL=http://backend:8000
+    depends_on:
+      - backend
+    networks:
+      - mynet
+
   db:
     image: postgres:15
     container_name: postgres_db
